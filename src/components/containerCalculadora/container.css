@@ -1,0 +1,38 @@
+.container {
+    display: flex;
+
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    place-items: center;
+    margin: 0;
+    min-width: 320px;
+    min-height: 70vh;
+
+    border-radius: 5px;
+    border: 1px solid rgb(62, 62, 81);
+    background: linear-gradient(130deg, rgba(41, 43, 61, 1) 100%, rgba(17, 18, 27, 0.00) 100%);
+}
+
+.visor{
+    border: 3px solid rgb(77, 77, 77);
+    border-top: none;
+    width: 97%;
+    height: 70px;
+    margin: 0px 0px 20px 0px;
+    color: #000;
+    font-size: 2.8em;
+    text-align: end;
+}
+
+.visorMemoria {
+    border: 3px solid rgb(77, 77, 77);
+    border-bottom: none;
+    width: 97%;
+    height: auto;
+    max-height: 100px;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 2em;
+    margin-top: 10px;
+    text-align: end;
+}
