@@ -1,4 +1,4 @@
-import Container from "./components/containerCalculadora/container.jsx";
+import Container from "./components/containerCalculadora/Container.jsx";
 
 
 function App() {
@@ -6,7 +6,8 @@ function App() {
 
   return (
     <>
-      <h1>Vite + React</h1>
+      <h1>Calculator</h1>
+        <h2>Builded using vite + React + Tailwind</h2>
         <Container />
     </>
   )
