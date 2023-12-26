@@ -50,21 +50,19 @@ h2 {
 button {
   border-radius: 2px;
   border: 1px solid rgba(144, 139, 139, 0.24);
-  padding: 0.5em 0.8em;
   font-size: 1.5em;
   font-weight: 500;
   font-family: inherit;
-  background-color: rgba(26, 26, 26, 0.7);
   cursor: pointer;
   transition: border-color 0.25s;
-
+  background-color: rgba(26, 26, 26, 0.7);
 }
 button:hover {
   border-color: #646cff;
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 2px auto -webkit-focus-ring-color;
 }
 
 
@@ -76,9 +74,7 @@ button:focus-visible {
   a:hover {
     color: #747bff;
   }
-  button {
-    background-color: #f9f9f9;
-  }
+
 
 
 }

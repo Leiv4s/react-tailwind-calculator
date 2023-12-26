@@ -1,13 +1,12 @@
 .container {
     display: flex;
-
     flex-direction: column;
-    justify-content: flex-start;
+
     align-items: center;
     place-items: center;
     margin: 0;
     min-width: 320px;
-    min-height: 70vh;
+    min-height: 65vh;
 
     border-radius: 5px;
     border: 1px solid rgb(62, 62, 81);
