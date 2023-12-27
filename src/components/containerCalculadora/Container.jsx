@@ -6,20 +6,27 @@ import {useState, useEffect} from 'react';
 function Container() {
 
     const [display, setDisplay] = useState("0");
+    const [displayMemoria, setDisplayMemoria] = useState(" ");
 
     //Funções visor
-    function addNumeroToDisplay(number) {
+    function addNumeroToDisplay(character) {
         if (display != 0) {
-            setDisplay(display + number)
+            setDisplay(display + character)
         } else {
-            setDisplay(number)
+            setDisplay(character)
         }
     }
 
-    function apagarUltimoDigito() {
+    function apagarUltimoDigitoDisplay() {
         let stringAtualizada = display.slice(0, -1);
         setDisplay(stringAtualizada);
     }
+
+    function apagarUltimoDigitoMemoria() {
+        let stringAtualizada = displayMemoria.slice(0, -1);
+        setDisplayMemoria(stringAtualizada);
+    }
+
     function clearDisplay() {
         setDisplay("0")
     }
@@ -48,9 +55,28 @@ function Container() {
             } else if (event.key === '0') {
                 addNumeroToDisplay("0");
             } else if (event.key === 'Backspace') {
-                if (display.length > 1){
-                    apagarUltimoDigito();
-                } else {setDisplay("0")}
+                const ultimoCaractere = display[display.length - 1];
+                if (ultimoCaractere === "+" ||
+                    ultimoCaractere === "-" ||
+                    ultimoCaractere === "/" ||
+                    ultimoCaractere === "*" ||
+                    ultimoCaractere === ","
+                ) {
+                    apagarUltimoDigitoMemoria();
+                    apagarUltimoDigitoDisplay();
+                } else if (display.length > 1) {
+                    apagarUltimoDigitoDisplay();
+                } else {
+                    setDisplay("0")
+                }
+            } else if (event.key === '+') {
+                adicionarOperador("+");
+            } else if (event.key === '-') {
+                adicionarOperador("-");
+            }else if (event.key === '*') {
+                adicionarOperador("*");
+            }else if (event.key === '/') {
+                adicionarOperador("/");
             }
         }
         document.addEventListener('keydown', handleKeyPress);
@@ -60,32 +86,40 @@ function Container() {
     }, [display])
 
 
-    var arg1;
-    var arg2;
+    var arg1 = null;
 
-    function setArg1() {
-        arg1 = parseFloat(display);
-        return arg1;
+    // var arg2 = null;
+
+    function setArg() {
+        return parseFloat(display);
     }
 
-// function setArg2() {
-//     arg1 = parseFloat(display);
-//     return arg2;
-// }
-    function somar(arg1, arg2) {
-        let aux = setArg1(display);
-        console.log(aux);
-        if (arg1 != null) {
-            setDisplay(arg1 + arg2);
+    function adicionarOperador(operador) {
+        if (arg1 == null) {
+            arg1 = setArg(display);
+        }
+
+        if (!displayMemoria.includes("+") &&
+            !displayMemoria.includes("-") &&
+            !displayMemoria.includes("/") &&
+            !displayMemoria.includes("*") &&
+            !displayMemoria.includes(",")
+        ) {
+            setDisplayMemoria(display + operador)
+            setDisplay("0");
         }
     }
+
+    // function resultado (arg1, arg2, operador) {
+    //     if
+    // }
 
     return (
         <div className="container">
 
             {/*visor e visor de memoria*/}
             <div className="visorMemoria bg-amber-50">
-                <p color="black">0</p>
+                <p color="black">{displayMemoria}</p>
             </div>
             <div className="visor bg-amber-50">
                 <p color="black">{display}</p>
@@ -98,7 +132,7 @@ function Container() {
                     clearDisplay();
                 }}>C</Button>
                 <Button className="col-span-2 bg-orange-700" onClick={() => {
-                    apagarUltimoDigito()
+                    apagarUltimoDigitoDisplay()
                 }}>apagar</Button>
                 <Button className="bg-transparent">x²</Button>
                 <Button className="bg-transparent">%</Button>
@@ -113,7 +147,9 @@ function Container() {
                 <Button onClick={() => {
                     addNumeroToDisplay("3")
                 }}>3</Button>
-                <Button className="bg-transparent">-</Button>
+                <Button className="bg-transparent" onClick={() => {
+                    adicionarOperador("-")
+                }}>-</Button>
                 <Button onClick={() => {
                     addNumeroToDisplay("4")
                 }}>4</Button>
@@ -124,7 +160,7 @@ function Container() {
                     addNumeroToDisplay("6")
                 }}>6</Button>
                 <Button className="bg-transparent operationButtons" onClick={() => {
-                    somar(arg1, arg2)
+                    adicionarOperador("+")
                 }}>+</Button>
                 <Button onClick={() => {
                     addNumeroToDisplay("7")
