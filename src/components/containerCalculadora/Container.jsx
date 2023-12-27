@@ -2,21 +2,18 @@ import "./Container.css"
 import Button from "../Button/Button.jsx";
 import {useState, useEffect} from 'react';
 
-
+    //variaveis globais
     var arg1 = null;
     var arg2 = null;
     var result = null;
+
 function Container() {
-    //variaveis e arrays uteis
+    //model
     const [display, setDisplay] = useState("0");
     const [displayMemoria, setDisplayMemoria] = useState(" '");
+    //verificadores do model
     const ultimoCaractereDisplay = display[display.length - 1];
     const ultimoCaractereMemoria = displayMemoria[displayMemoria.length - 1]
-
-    //funções uteis
-    function setArg() {
-        return parseFloat(display);
-    }
     const contemOperador = (displayMemoria) => {
         if (displayMemoria.includes("+") &&
             displayMemoria.includes("-") &&
@@ -29,7 +26,6 @@ function Container() {
             return false;
         }
     }
-
 
 
     //Funções visor
@@ -57,8 +53,7 @@ function Container() {
     }
 
 
-
-    /* UseEffect Function*/
+    //UseEffect Function
     useEffect(() => {
         const handleKeyPress = (event) => {
             if (event.key === '1') {
@@ -107,8 +102,6 @@ function Container() {
     }, [display])
 
 
-
-
     //funções de restrição de dominio das teclas;
     function BackspaceRestricaoDominio() {
         if (ultimoCaractereDisplay === "+" ||
@@ -126,6 +119,11 @@ function Container() {
         }
     }
 
+
+    //funções de operação:
+    function setArg() {
+        return parseFloat(display);
+    }
     function adicionarOperador(operador) {
 
         if (arg1 == null) {
@@ -149,7 +147,6 @@ function Container() {
         console.log(displayMemoria)
         console.log(display)
     }
-
     function resultado() {
         console.log("fui chamado")
         //seta os arg1 e arg2 do calculo;
