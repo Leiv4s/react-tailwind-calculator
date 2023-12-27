@@ -3,27 +3,34 @@ import Button from "../Button/Button.jsx";
 import {useState, useEffect} from 'react';
 
 
-var arg1 = null;
-var arg2 = null;
-var result = null;
-
-const contemOperador = (displayMemoria) => {
-    if (displayMemoria.includes("+") &&
-        displayMemoria.includes("-") &&
-        displayMemoria.includes("/") &&
-        displayMemoria.includes("*") &&
-        displayMemoria.includes(",")
-    ) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
+    var arg1 = null;
+    var arg2 = null;
+    var result = null;
 function Container() {
-
+    //variaveis e arrays uteis
     const [display, setDisplay] = useState("0");
     const [displayMemoria, setDisplayMemoria] = useState(" '");
+    const ultimoCaractereDisplay = display[display.length - 1];
+    const ultimoCaractereMemoria = displayMemoria[displayMemoria.length - 1]
+
+    //funções uteis
+    function setArg() {
+        return parseFloat(display);
+    }
+    const contemOperador = (displayMemoria) => {
+        if (displayMemoria.includes("+") &&
+            displayMemoria.includes("-") &&
+            displayMemoria.includes("/") &&
+            displayMemoria.includes("*") &&
+            displayMemoria.includes(",")
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 
     //Funções visor
     function addNumeroToDisplay(character) {
@@ -33,25 +40,23 @@ function Container() {
             setDisplay(character)
         }
     }
-
     function apagarUltimoDigitoDisplay() {
         let stringAtualizada = display.slice(0, -1);
         setDisplay(stringAtualizada);
     }
-
     function apagarUltimoDigitoMemoria() {
         let stringAtualizada = displayMemoria.slice(0, -1);
         setDisplayMemoria(stringAtualizada);
     }
-
     function clearDisplay() {
         setDisplay("0")
     }
-
     function clearAll() {
         clearDisplay();
         setDisplayMemoria("'")
     }
+
+
 
     /* UseEffect Function*/
     useEffect(() => {
@@ -81,25 +86,9 @@ function Container() {
             } else if (event.shiftKey && event.key === 'Backspace') {
                 clearAll()
             } else if (event.key === 'Backspace') {
-                const ultimoCaractere = display[display.length - 1];
-                if (ultimoCaractere === "+" ||
-                    ultimoCaractere === "-" ||
-                    ultimoCaractere === "/" ||
-                    ultimoCaractere === "*" ||
-                    ultimoCaractere === ","
-                ) {
-                    apagarUltimoDigitoMemoria();
-                    apagarUltimoDigitoDisplay();
-                } else if (display.length > 1) {
-                    apagarUltimoDigitoDisplay();
-                } else {
-                    setDisplay("0")
-                }
+                BackspaceRestricaoDominio();
             } else if (event.key === '+') {
-                if (displayMemoria)
-
-
-                    adicionarOperador("+");
+                adicionarOperador("+");
             } else if (event.key === '-') {
                 adicionarOperador("-");
             } else if (event.key === '*') {
@@ -118,45 +107,65 @@ function Container() {
     }, [display])
 
 
-    function setArg() {
-        return parseFloat(display);
+
+
+    //funções de restrição de dominio das teclas;
+    function BackspaceRestricaoDominio() {
+        if (ultimoCaractereDisplay === "+" ||
+            ultimoCaractereDisplay === "-" ||
+            ultimoCaractereDisplay === "/" ||
+            ultimoCaractereDisplay === "*" ||
+            ultimoCaractereDisplay === ","
+        ) {
+            apagarUltimoDigitoMemoria();
+            apagarUltimoDigitoDisplay();
+        } else if (display.length > 1) {
+            apagarUltimoDigitoDisplay();
+        } else {
+            setDisplay("0")
+        }
     }
 
     function adicionarOperador(operador) {
-        let ultimoCaractere = displayMemoria[displayMemoria.length - 1]
+
         if (arg1 == null) {
             arg1 = setArg(display);
+            console.log("hãããã.... gozei")
         }
-        if (ultimoCaractere === "=") {
+        if (ultimoCaractereMemoria === "=") {
             let stringAtualizada = display.slice(0, -1);
             setDisplay(stringAtualizada);
+            console.log("entrei")
+            console.log(arg1)
+            console.log(arg2)
         }
-        if (!contemOperador(displayMemoria)){
+        if (!contemOperador(displayMemoria)) {
             setDisplayMemoria(display + operador)
             setDisplay("0");
         }
+        console.log("entrei fim")
+        console.log(arg1)
+        console.log(arg2)
+        console.log(displayMemoria)
+        console.log(display)
     }
 
     function resultado() {
+        console.log("fui chamado")
         //seta os arg1 e arg2 do calculo;
+
         if (arg1 != null) {
-            arg2 = parseFloat(display);
             console.log("entrei no 1o if")
+            arg2 = parseFloat(display);
         }
         if (arg2 != null) {
             setDisplayMemoria(displayMemoria + (arg2.toString()));
             console.log("entrei no 2o if")
         }
-
         //verifica se existe operador no display;
         if (displayMemoria.includes("+")) {
             result = arg1 + arg2;
             setDisplay(result);
-
-            if (event.key === '+') {
-                adicionarOperador("+");
-            }
-
             arg1 = result;
             arg2 = null;
 
@@ -178,16 +187,6 @@ function Container() {
         }
 
     }
-
-    //  else if (event.key === '-') {
-    //     adicionarOperador("-");
-    // } else if (event.key === '*') {
-    //     adicionarOperador("*");
-    // } else if (event.key === '/') {
-    //     adicionarOperador("/");
-    // } else if (event.key === 'Enter') {
-    //     resultado();
-    // }
 
     return (
         <div className="container">
