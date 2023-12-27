@@ -7,6 +7,19 @@ var arg1 = null;
 var arg2 = null;
 var result = null;
 
+const contemOperador = (displayMemoria) => {
+    if (displayMemoria.includes("+") &&
+        displayMemoria.includes("-") &&
+        displayMemoria.includes("/") &&
+        displayMemoria.includes("*") &&
+        displayMemoria.includes(",")
+    ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function Container() {
 
     const [display, setDisplay] = useState("0");
@@ -34,14 +47,14 @@ function Container() {
     function clearDisplay() {
         setDisplay("0")
     }
+
     function clearAll() {
         clearDisplay();
         setDisplayMemoria("'")
     }
 
-
     /* UseEffect Function*/
-        useEffect(() => {
+    useEffect(() => {
         const handleKeyPress = (event) => {
             if (event.key === '1') {
                 addNumeroToDisplay("1");
@@ -63,14 +76,11 @@ function Container() {
                 addNumeroToDisplay("9");
             } else if (event.key === '0') {
                 addNumeroToDisplay("0");
-            }else if (event.ctrlKey && event.key === 'Backspace') {
+            } else if (event.ctrlKey && event.key === 'Backspace') {
                 clearDisplay()
-            }else if (event.shiftKey && event.key === 'Backspace') {
+            } else if (event.shiftKey && event.key === 'Backspace') {
                 clearAll()
-            }
-
-
-            else if (event.key === 'Backspace') {
+            } else if (event.key === 'Backspace') {
                 const ultimoCaractere = display[display.length - 1];
                 if (ultimoCaractere === "+" ||
                     ultimoCaractere === "-" ||
@@ -86,14 +96,17 @@ function Container() {
                     setDisplay("0")
                 }
             } else if (event.key === '+') {
-                adicionarOperador("+");
+                if (displayMemoria)
+
+
+                    adicionarOperador("+");
             } else if (event.key === '-') {
                 adicionarOperador("-");
-            }else if (event.key === '*') {
+            } else if (event.key === '*') {
                 adicionarOperador("*");
-            }else if (event.key === '/') {
+            } else if (event.key === '/') {
                 adicionarOperador("/");
-            }else if (event.key === 'Enter') {
+            } else if (event.key === 'Enter') {
                 resultado();
             }
 
@@ -105,57 +118,76 @@ function Container() {
     }, [display])
 
 
-
     function setArg() {
         return parseFloat(display);
     }
 
     function adicionarOperador(operador) {
+        let ultimoCaractere = displayMemoria[displayMemoria.length - 1]
         if (arg1 == null) {
             arg1 = setArg(display);
         }
-        if (!displayMemoria.includes("+") &&
-            !displayMemoria.includes("-") &&
-            !displayMemoria.includes("/") &&
-            !displayMemoria.includes("*") &&
-            !displayMemoria.includes(",")
-        ) {
+        if (ultimoCaractere === "=") {
+            let stringAtualizada = display.slice(0, -1);
+            setDisplay(stringAtualizada);
+        }
+        if (!contemOperador(displayMemoria)){
             setDisplayMemoria(display + operador)
             setDisplay("0");
         }
     }
 
     function resultado() {
+        //seta os arg1 e arg2 do calculo;
         if (arg1 != null) {
-            arg2=parseFloat(display);
+            arg2 = parseFloat(display);
             console.log("entrei no 1o if")
         }
         if (arg2 != null) {
-            setDisplayMemoria(displayMemoria+(arg2.toString()));
+            setDisplayMemoria(displayMemoria + (arg2.toString()));
             console.log("entrei no 2o if")
         }
-        console.log(arg1)
-        console.log(arg2)
 
-        if (displayMemoria.includes("+")){
-            console.log("entrei no terceiro if - começo")
-            result = arg1+arg2;
-            setDisplay(result)
+        //verifica se existe operador no display;
+        if (displayMemoria.includes("+")) {
+            result = arg1 + arg2;
+            setDisplay(result);
+
+            if (event.key === '+') {
+                adicionarOperador("+");
+            }
+
+            arg1 = result;
+            arg2 = null;
+
         } else if (displayMemoria.includes("-")) {
-            result = arg1-arg2;
+            result = arg1 - arg2;
             setDisplay(result)
-        }else if (displayMemoria.includes("/")) {
-            result = arg1/arg2;
+            arg1 = result;
+            arg2 = null;
+        } else if (displayMemoria.includes("/")) {
+            result = arg1 / arg2;
             setDisplay(result)
+            arg1 = result;
+            arg2 = null;
         } else if (displayMemoria.includes("*")) {
-            result = arg1*arg2;
+            result = arg1 * arg2;
             setDisplay(result)
+            arg1 = result;
+            arg2 = null;
         }
 
     }
 
-
-
+    //  else if (event.key === '-') {
+    //     adicionarOperador("-");
+    // } else if (event.key === '*') {
+    //     adicionarOperador("*");
+    // } else if (event.key === '/') {
+    //     adicionarOperador("/");
+    // } else if (event.key === 'Enter') {
+    //     resultado();
+    // }
 
     return (
         <div className="container">
@@ -170,7 +202,9 @@ function Container() {
 
             {/*div c/ grid para os botões*/}
             <div className="grid grid-cols-4 gap-0.5  h-auto w-full p-1 ">
-                <Button className="bg-transparent" onClick={()=>{clearDisplay()} }>CE</Button>
+                <Button className="bg-transparent" onClick={() => {
+                    clearDisplay()
+                }}>CE</Button>
                 <Button className="bg-transparent" onClick={() => {
                     clearAll();
                 }}>C</Button>
@@ -214,7 +248,9 @@ function Container() {
                 <Button onClick={() => {
                     addNumeroToDisplay("9")
                 }}>9</Button>
-                <Button className="row-span-2 bg-orange-700" onClick={() =>{resultado()} }>=</Button>
+                <Button className="row-span-2 bg-orange-700" onClick={() => {
+                    resultado()
+                }}>=</Button>
                 <Button className="bg-transparent">+/-</Button>
                 <Button onClick={() => {
                     addNumeroToDisplay("0")
