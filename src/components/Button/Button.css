@@ -8,6 +8,8 @@ button {
     cursor: pointer;
     transition: border-color 0.25s;
     background-color: rgba(26, 26, 26, 0.7);
+    padding: 10px 20px;
+
 }
 button:hover {
     border-color: #646cff;
