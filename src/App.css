@@ -1,0 +1,35 @@
+.imgContainer {
+    display:flex;
+    margin-top: -20px;
+    margin-bottom: -10px;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.react {
+    margin-left: -15px;
+    margin-right: 10px}
+
+.logo {
+    height: 6em;
+    padding: 2em;
+    will-change: filter;
+    transition: filter 300ms;
+}
+.logo:hover {
+    filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+    filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+
+
+@media (prefers-reduced-motion: no-preference) {
+    a:nth-of-type(2) .logo {
+        animation: logo-spin infinite 20s linear;
+    }
+}
+
+

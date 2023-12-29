@@ -2,23 +2,25 @@ import "./Container.css"
 import Button from "../Button/Button.jsx";
 import {useState, useEffect} from 'react';
 
-    //variaveis globais
-    var arg1 = null;
-    var arg2 = null;
-    var result = null;
+//variaveis globais
+var arg1 = null;
+var arg2 = null;
+var result = null;
 
 function Container() {
     //model
     const [display, setDisplay] = useState("0");
     const [displayMemoria, setDisplayMemoria] = useState(" '");
     //verificadores do model
-    const ultimoCaractereDisplay = display[display.length - 1];
-    const ultimoCaractereMemoria = displayMemoria[displayMemoria.length - 1]
+    let ultimoCaractereDisplay = display[display.length - 1];
+    let ultimoCaractereMemoria = displayMemoria[displayMemoria.length - 1]
+
+
     const contemOperador = (displayMemoria) => {
-        if (displayMemoria.includes("+") &&
-            displayMemoria.includes("-") &&
-            displayMemoria.includes("/") &&
-            displayMemoria.includes("*") &&
+        if (displayMemoria.includes("+") ||
+            displayMemoria.includes("-") ||
+            displayMemoria.includes("/") ||
+            displayMemoria.includes("*") ||
             displayMemoria.includes(",")
         ) {
             return true;
@@ -36,17 +38,21 @@ function Container() {
             setDisplay(character)
         }
     }
+
     function apagarUltimoDigitoDisplay() {
         let stringAtualizada = display.slice(0, -1);
         setDisplay(stringAtualizada);
     }
+
     function apagarUltimoDigitoMemoria() {
         let stringAtualizada = displayMemoria.slice(0, -1);
         setDisplayMemoria(stringAtualizada);
     }
+
     function clearDisplay() {
         setDisplay("0")
     }
+
     function clearAll() {
         clearDisplay();
         setDisplayMemoria("'")
@@ -86,12 +92,24 @@ function Container() {
                 adicionarOperador("+");
             } else if (event.key === '-') {
                 adicionarOperador("-");
+                if (contemOperador(displayMemoria)) {
+                    console.log("mamamaiiii")
+                    setDisplayMemoria((displayMemoria.substring(0, displayMemoria.length - 1)) + "-")
+                    resultado();
+                }
             } else if (event.key === '*') {
                 adicionarOperador("*");
             } else if (event.key === '/') {
                 adicionarOperador("/");
             } else if (event.key === 'Enter') {
+
                 resultado();
+                // if (display != 0) {
+                //     resultado();
+                //     setDisplayMemoria(displayMemoria.substring(0, displayMemoria.length - 1))
+                // } else {
+                //     setDisplayMemoria()
+                // }
             }
 
         }
@@ -124,65 +142,57 @@ function Container() {
     function setArg() {
         return parseFloat(display);
     }
+
     function adicionarOperador(operador) {
+        console.log(ultimoCaractereMemoria + "   eh nois - !")
+
 
         if (arg1 == null) {
             arg1 = setArg(display);
-            console.log("hãããã.... gozei")
-        }
-        if (ultimoCaractereMemoria === "=") {
-            let stringAtualizada = display.slice(0, -1);
-            setDisplay(stringAtualizada);
-            console.log("entrei")
-            console.log(arg1)
-            console.log(arg2)
-        }
-        if (!contemOperador(displayMemoria)) {
-            setDisplayMemoria(display + operador)
-            setDisplay("0");
-        }
-        console.log("entrei fim")
-        console.log(arg1)
-        console.log(arg2)
-        console.log(displayMemoria)
-        console.log(display)
-    }
-    function resultado() {
-        console.log("fui chamado")
-        //seta os arg1 e arg2 do calculo;
-
-        if (arg1 != null) {
-            console.log("entrei no 1o if")
+            console.log("adicionei valor ao arg1")
+        } else if (arg1 != null) {
+            console.log("passei valor pra arg2")
             arg2 = parseFloat(display);
         }
+
         if (arg2 != null) {
             setDisplayMemoria(displayMemoria + (arg2.toString()));
             console.log("entrei no 2o if")
         }
+
+        if (arg1 != null && arg2 != null) {
+            resultado();
+        }
+
+        if (!contemOperador(displayMemoria)) {
+            setDisplayMemoria(display + operador)
+            setDisplay("0");
+        }
+
+
+    }
+
+    function resultado() {
+        //seta os arg1 e arg2 do calculo;
+        console.log("entrei resultado")
+
         //verifica se existe operador no display;
         if (displayMemoria.includes("+")) {
             result = arg1 + arg2;
-            setDisplay(result);
-            arg1 = result;
-            arg2 = null;
-
+            setDisplayMemoria(result + "+")
         } else if (displayMemoria.includes("-")) {
             result = arg1 - arg2;
-            setDisplay(result)
-            arg1 = result;
-            arg2 = null;
+            setDisplayMemoria(result + "-")
         } else if (displayMemoria.includes("/")) {
             result = arg1 / arg2;
-            setDisplay(result)
-            arg1 = result;
-            arg2 = null;
+            setDisplayMemoria(result + "/")
         } else if (displayMemoria.includes("*")) {
             result = arg1 * arg2;
-            setDisplay(result)
-            arg1 = result;
-            arg2 = null;
+            setDisplayMemoria(result + "*")
         }
-
+        setDisplay(0);
+        arg1 = result;
+        arg2 = null;
     }
 
     return (
