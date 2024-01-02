@@ -17,6 +17,8 @@ function Container() {
 
     //verificadores do model
     let ultimoCaractereDisplay = display[display.length - 1];
+    let ultimoCaractereDisplayMemoria = displayMemoria[displayMemoria.length - 1];
+
 
 
 
@@ -50,6 +52,16 @@ function Container() {
         arg2 = null;
         setOperador("");
     }
+    function contemOperador(){
+        if (ultimoCaractereDisplayMemoria == "+" ||
+            ultimoCaractereDisplayMemoria == "-" ||
+            ultimoCaractereDisplayMemoria == "/" ||
+            ultimoCaractereDisplayMemoria == "*") {
+            return true;
+        } else {return false}
+
+    }
+
 
 
     function resultadoEnter() {
@@ -134,28 +146,21 @@ function Container() {
     }
 
     function adicionarOperador(operadorPassado) {
-        console.log("FUNC ADD OPERADOR")
-        console.log(arg1, arg2, operador, "1 log")
+        console.log("FUNC AdicionarOperador")
+
         setOperador(operadorPassado)
-        console.log(arg1, arg2, operador, "2 log")
         if (arg1 == null) {
             arg1 = setArg(display);
-            console.log("adicionei valor ao arg1 e ele agora é: " + arg1)
-            console.log(operador + "hahay")
             setDisplay("0")
             setDisplayMemoria(arg1 + operadorPassado)
 
         } else if (arg1 != null) {
             arg2 = parseFloat(display);
-            console.log("passei valor pra arg2 e ele agora é: " + arg2)
         }
 
         if (arg1 != null && arg2 != null) {
-            console.log("entrei no if resultado")
             resultado();
         }
-
-
     }
 
 
