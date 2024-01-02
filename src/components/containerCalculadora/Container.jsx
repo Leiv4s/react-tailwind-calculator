@@ -6,28 +6,18 @@ import {useState, useEffect} from 'react';
 var arg1 = null;
 var arg2 = null;
 var result = null;
+var aux2;
+var aux1;
 
 function Container() {
     //model
     const [display, setDisplay] = useState("0");
     const [displayMemoria, setDisplayMemoria] = useState(" '");
+    const [operador, setOperador] = useState("");
+
     //verificadores do model
     let ultimoCaractereDisplay = display[display.length - 1];
-    let ultimoCaractereMemoria = displayMemoria[displayMemoria.length - 1]
 
-
-    const contemOperador = (displayMemoria) => {
-        if (displayMemoria.includes("+") ||
-            displayMemoria.includes("-") ||
-            displayMemoria.includes("/") ||
-            displayMemoria.includes("*") ||
-            displayMemoria.includes(",")
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
 
     //Funções visor
@@ -56,8 +46,20 @@ function Container() {
     function clearAll() {
         clearDisplay();
         setDisplayMemoria("'")
+        arg1 = null;
+        arg2 = null;
+        setOperador("");
     }
 
+
+    function resultadoEnter() {
+        if (arg1 != null) {
+            arg2 = parseFloat(display);
+            console.log("passei valor pra arg2 e ele agora é: " + arg2)
+        }
+        resultado();
+        setDisplayMemoria(aux1 + operador + aux2 + "=" + arg1)
+    }
 
     //UseEffect Function
     useEffect(() => {
@@ -92,24 +94,12 @@ function Container() {
                 adicionarOperador("+");
             } else if (event.key === '-') {
                 adicionarOperador("-");
-                if (contemOperador(displayMemoria)) {
-                    console.log("mamamaiiii")
-                    setDisplayMemoria((displayMemoria.substring(0, displayMemoria.length - 1)) + "-")
-                    resultado();
-                }
             } else if (event.key === '*') {
                 adicionarOperador("*");
             } else if (event.key === '/') {
                 adicionarOperador("/");
             } else if (event.key === 'Enter') {
-
-                resultado();
-                // if (display != 0) {
-                //     resultado();
-                //     setDisplayMemoria(displayMemoria.substring(0, displayMemoria.length - 1))
-                // } else {
-                //     setDisplayMemoria()
-                // }
+                resultadoEnter();
             }
 
         }
@@ -143,61 +133,61 @@ function Container() {
         return parseFloat(display);
     }
 
-    function adicionarOperador(operador) {
-        console.log(ultimoCaractereMemoria + "   eh nois - !")
-
-
+    function adicionarOperador(operadorPassado) {
+        console.log("FUNC ADD OPERADOR")
+        console.log(arg1, arg2, operador, "1 log")
+        setOperador(operadorPassado)
+        console.log(arg1, arg2, operador, "2 log")
         if (arg1 == null) {
             arg1 = setArg(display);
-            console.log("adicionei valor ao arg1")
-        } else if (arg1 != null) {
-            console.log("passei valor pra arg2")
-            arg2 = parseFloat(display);
-        }
+            console.log("adicionei valor ao arg1 e ele agora é: " + arg1)
+            console.log(operador + "hahay")
+            setDisplay("0")
+            setDisplayMemoria(arg1 + operadorPassado)
 
-        if (arg2 != null) {
-            setDisplayMemoria(displayMemoria + (arg2.toString()));
-            console.log("entrei no 2o if")
+        } else if (arg1 != null) {
+            arg2 = parseFloat(display);
+            console.log("passei valor pra arg2 e ele agora é: " + arg2)
         }
 
         if (arg1 != null && arg2 != null) {
+            console.log("entrei no if resultado")
             resultado();
-        }
-
-        if (!contemOperador(displayMemoria)) {
-            setDisplayMemoria(display + operador)
-            setDisplay("0");
         }
 
 
     }
 
-    function resultado() {
-        //seta os arg1 e arg2 do calculo;
-        console.log("entrei resultado")
 
-        //verifica se existe operador no display;
-        if (displayMemoria.includes("+")) {
-            result = arg1 + arg2;
-            setDisplayMemoria(result + "+")
-        } else if (displayMemoria.includes("-")) {
-            result = arg1 - arg2;
-            setDisplayMemoria(result + "-")
-        } else if (displayMemoria.includes("/")) {
-            result = arg1 / arg2;
-            setDisplayMemoria(result + "/")
-        } else if (displayMemoria.includes("*")) {
-            result = arg1 * arg2;
-            setDisplayMemoria(result + "*")
+    function resultado() {
+        console.log("FUNC RESULTADO")
+        console.log(arg1, arg2, operador)
+        if (arg1 !== "" && arg2 !== "0" && operador !== "") {
+            if (operador.includes("+")) {
+                console.log("na func resultado, entrei no +")
+                result = arg1 + arg2;
+                setDisplayMemoria(result + "+")
+            } else if (operador.includes("-")) {
+                result = arg1 - arg2;
+                setDisplayMemoria(result + "-")
+            } else if (operador.includes("/")) {
+                result = arg1 / arg2;
+                setDisplayMemoria(result + "/")
+            } else if (operador.includes("*")) {
+                result = arg1 * arg2;
+                setDisplayMemoria(result + "*")
+            }
+            aux1 = arg1;
+            aux2 = arg2;
+            setDisplay(0);
+            arg1 = result;
+            arg2 = 0;
+            console.log(arg1, arg2, operador)
         }
-        setDisplay(0);
-        arg1 = result;
-        arg2 = null;
     }
 
     return (
         <div className="container">
-
             {/*visor e visor de memoria*/}
             <div className="visorMemoria bg-amber-50">
                 <p color="black">{displayMemoria}</p>
@@ -255,7 +245,7 @@ function Container() {
                     addNumeroToDisplay("9")
                 }}>9</Button>
                 <Button className="row-span-2 bg-orange-700" onClick={() => {
-                    resultado()
+                    resultadoEnter()
                 }}>=</Button>
                 <Button className="bg-transparent">+/-</Button>
                 <Button onClick={() => {

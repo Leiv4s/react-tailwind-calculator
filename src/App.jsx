@@ -19,6 +19,7 @@ function App() {
         </div>
 
         <Container />
+      <h2>Maded by Leiv4s</h2>
     </>
   )
 }
